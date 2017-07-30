@@ -1,3 +1,6 @@
 [submodule "3rd-party/gtest-1.8.0"]
 	path = 3rd-party/gtest-1.8.0
 	url = https://github.com/google/googletest
+[submodule "3rd-party/fmt-4.0.0"]
+	path = 3rd-party/fmt-4.0.0
+	url = https://github.com/fmtlib/fmt.git
