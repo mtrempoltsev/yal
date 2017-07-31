@@ -85,6 +85,76 @@ TEST(yal, checkSeverity)
     EXPECT_EQ(buf.str(), "DEBUG\nINFO \nWARN \nERROR\nFATAL\n");
 }
 
+TEST(yal, checkIfCondition)
+{
+    using namespace artec::yal;
+
+    std::stringstream buf;
+
+    SinkList sinks;
+    sinks.push_back(std::make_unique<StdStreamSink>(buf));
+    instance().setSinks(sinks);
+
+    PrinterList printers{ printSeverity };
+    instance().setPrinters(printers);
+
+    instance().setThreshold(Severity::Debug);
+
+    artec::yal::instance().start();
+
+    YAL_DEBUG_IF(1 + 1) << "debug";
+    YAL_INFO_IF(1 + 1) << "info";
+    YAL_WARNING_IF(1 + 1) << "warning";
+    YAL_ERROR_IF(1 + 1) << "error";
+    YAL_FATAL_IF(1 + 1) << "fatal";
+
+    YAL_DEBUG_IF(1 + 1) << "debug";
+    YAL_INFO_IF(1 - 1) << "info";
+    YAL_WARNING_IF(1 + 1) << "warning";
+    YAL_ERROR_IF(1 - 1) << "error";
+    YAL_FATAL_IF(1 + 1) << "fatal";
+
+    artec::yal::instance().stop().wait();
+
+    EXPECT_EQ(buf.str(), "DEBUG\nINFO \nWARN \nERROR\nFATAL\nDEBUG\nWARN \nFATAL\n");
+}
+
+TEST(yal, checkIfConditionThreshold)
+{
+    using namespace artec::yal;
+
+    std::stringstream buf;
+
+    SinkList sinks;
+    sinks.push_back(std::make_unique<StdStreamSink>(buf));
+    instance().setSinks(sinks);
+
+    PrinterList printers{ printSeverity };
+    instance().setPrinters(printers);
+
+    instance().setThreshold(Severity::Warning);
+
+    buf.clear();
+
+    artec::yal::instance().start();
+
+    YAL_DEBUG_IF(1 + 1) << "debug";
+    YAL_INFO_IF(1 + 1) << "info";
+    YAL_WARNING_IF(1 + 1) << "warning";
+    YAL_ERROR_IF(1 + 1) << "error";
+    YAL_FATAL_IF(1 + 1) << "fatal";
+
+    YAL_DEBUG_IF(1 + 1) << "debug";
+    YAL_INFO_IF(1 - 1) << "info";
+    YAL_WARNING_IF(1 + 1) << "warning";
+    YAL_ERROR_IF(1 - 1) << "error";
+    YAL_FATAL_IF(1 + 1) << "fatal";
+
+    artec::yal::instance().stop().wait();
+
+    EXPECT_EQ(buf.str(), "WARN \nERROR\nFATAL\nWARN \nFATAL\n");
+}
+
 TEST(yal, checkThreshold)
 {
     using namespace artec::yal;
