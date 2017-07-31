@@ -1,10 +1,36 @@
 ﻿#include <cassert>
 #include <iostream>
+#include <random>
 #include <sstream>
 
 #include <gtest/gtest.h>
 
+#include <yal/utils.h>
 #include <yal/yal.h>
+
+TEST(yal, checkToDateTime)
+{
+    using namespace artec::yal;
+
+    std::default_random_engine generator;
+    std::uniform_int_distribution<time_t> distribution(0, std::numeric_limits<time_t>::max());
+
+    const int N = 100000;
+    for (int i = 0; i < N; ++i)
+    {
+        const auto t = distribution(generator);
+
+        const auto t1 = toDateTime<artec::yal::clock_t>(artec::yal::clock_t::from_time_t(t));
+        const auto t2 = std::gmtime(&t);
+
+        EXPECT_EQ(t1.year, t2->tm_year + 1900);
+        EXPECT_EQ(t1.month, t2->tm_mon + 1);
+        EXPECT_EQ(t1.day, t2->tm_mday);
+        EXPECT_EQ(t1.hour, t2->tm_hour);
+        EXPECT_EQ(t1.min, t2->tm_min);
+        EXPECT_EQ(t1.sec, t2->tm_sec);
+    }
+}
 
 TEST(yal, checkEntry)
 {
@@ -164,7 +190,7 @@ void stressTest()
     std::ofstream file("log1.txt");
 
     artec::yal::SinkList sinks;
-    sinks.push_back(std::make_unique<artec::yal::StdStreamSink>(file));
+    //sinks.push_back(std::make_unique<artec::yal::StdStreamSink>(file));
     sinks.push_back(std::make_unique<artec::yal::FileSink>("log2.txt"));
     artec::yal::instance().setSinks(sinks);
 
@@ -228,9 +254,9 @@ int main(int argc, char* argv[])
 {
     artec::yal::instance().stop().wait();
 
-#ifdef YAL_ENABLE_STRESS_TEST
+//#ifdef YAL_ENABLE_STRESS_TEST
     stressTest();
-#endif
+//#endif
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

@@ -9,19 +9,9 @@ artec::yal::StdStreamSink::StdStreamSink(std::ostream& stream) noexcept
 {
 }
 
-void artec::yal::StdStreamSink::writeEntryItem(const std::string& text)
+void artec::yal::StdStreamSink::out(const std::string& text)
 {
-    stream_ << text;
-}
-
-void artec::yal::StdStreamSink::addSeparator()
-{
-    stream_ << ' ';
-}
-
-void artec::yal::StdStreamSink::endOfEntry()
-{
-    stream_ << '\n';
+    stream_ << text << '\n';
 }
 
 void artec::yal::StdStreamSink::flush()
@@ -38,18 +28,9 @@ artec::yal::FileSink::FileSink(const std::string& fileName)
     }
 }
 
-void artec::yal::FileSink::writeEntryItem(const std::string& text)
+void artec::yal::FileSink::out(const std::string& text)
 {
     file_.write(text.data(), text.size());
-}
-
-void artec::yal::FileSink::addSeparator()
-{
-    file_.put(' ');
-}
-
-void artec::yal::FileSink::endOfEntry()
-{
     file_.put('\n');
 }
 

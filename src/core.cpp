@@ -125,23 +125,26 @@ void artec::yal::Core::process(const EntryList& entries)
 {
     for (const auto& entry : entries)
     {
-        for (auto& sink : sinks_)
+        Stream buf;
+
+        bool isFirst = true;
+        for (auto& printer : printers_)
         {
-            bool isFirst = true;
-            for (auto& printer : printers_)
+            if (isFirst)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    sink->addSeparator();
-                }
-                printer(*sink, entry);
+                isFirst = false;
+            }
+            else
+            {
+                buf << ' ';
             }
 
-            sink->endOfEntry();
+            printer(buf, entry);
+        }
+
+        for (auto& sink : sinks_)
+        {
+            sink->out(buf.str());
         }
     }
 

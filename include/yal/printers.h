@@ -2,22 +2,25 @@
 
 #include <vector>
 
+#include <fmt/format.h>
+
 namespace artec
 {
     namespace yal
     {
-        class AbstractSink;
         struct Entry;
 
-        using PrintFunction = void (*)(AbstractSink& sink, const Entry& entry);
+        using Stream = fmt::MemoryWriter;
+
+        using PrintFunction = void (*)(Stream& stream, const Entry& entry);
         using PrinterList = std::vector<PrintFunction>;
 
-        void printSeverity(AbstractSink& sink, const Entry& entry);
-        void printText(AbstractSink& sink, const Entry& entry);
-        void printTimezone(AbstractSink& sink, const Entry& entry);
-        void printTime(AbstractSink& sink, const Entry& entry);
-        void printDate(AbstractSink& sink, const Entry& entry);
-        void printThread(AbstractSink& sink, const Entry& entry);
-        void printPlaceInCode(AbstractSink& sink, const Entry& entry);
+        void printSeverity(Stream& stream, const Entry& entry);
+        void printText(Stream& stream, const Entry& entry);
+        void printTimezone(Stream& stream, const Entry& entry);
+        void printTime(Stream& stream, const Entry& entry);
+        void printDate(Stream& stream, const Entry& entry);
+        void printThread(Stream& stream, const Entry& entry);
+        void printPlaceInCode(Stream& stream, const Entry& entry);
     }
 }

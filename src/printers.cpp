@@ -5,51 +5,66 @@
 #include <unordered_map>
 
 #include "../include/yal/entries.h"
-#include "../include/yal/sinks.h"
+#include "../include/yal/utils.h"
 
-void artec::yal::printSeverity(AbstractSink& sink, const Entry& entry)
+namespace
 {
-    sink.writeEntryItem(toString(entry.level));
+    artec::yal::Stream& appendZeroIfNeeded(artec::yal::Stream& stream, int value)
+    {
+        if (value < 10)
+        {
+            stream << '0';
+        }
+        stream << value;
+        return stream;
+    }
 }
 
-void artec::yal::printText(AbstractSink& sink, const Entry& entry)
+void artec::yal::printSeverity(Stream& stream, const Entry& entry)
 {
-    sink.writeEntryItem(entry.text);
+    stream << toString(entry.level);
 }
 
-void artec::yal::printTimezone(AbstractSink& sink, const Entry& entry)
+void artec::yal::printText(Stream& stream, const Entry& entry)
 {
+    stream << entry.text;
+}
+
+void artec::yal::printTimezone(Stream& stream, const Entry& entry)
+{
+    //TODO need to improve performance (localtime is very expensive)
+
     const auto time = clock_t::to_time_t(entry.time);
     const auto localtime = std::localtime(&time);
 
     std::stringstream buf;
     buf << std::put_time(localtime, "%z");
-    sink.writeEntryItem(buf.str());
+    stream << buf.str();
 }
 
-void artec::yal::printTime(AbstractSink& sink, const Entry& entry)
+void artec::yal::printTime(Stream& stream, const Entry& entry)
 {
     const auto time = clock_t::to_time_t(entry.time);
     const auto upToSecond = clock_t::from_time_t(time);
     const auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(entry.time - upToSecond).count();
-    const auto localtime = std::localtime(&time);
 
-    std::stringstream buf;
-    buf << std::put_time(localtime, "%T") << '.' << microseconds;
-    sink.writeEntryItem(buf.str());
+    const auto utcTime = toDateTime<clock_t>(entry.time);
+
+    appendZeroIfNeeded(stream, utcTime.hour) << ':';
+    appendZeroIfNeeded(stream, utcTime.min) << ':';
+    appendZeroIfNeeded(stream, utcTime.sec) << '.' << microseconds;
 }
 
-void artec::yal::printDate(AbstractSink& sink, const Entry& entry)
+void artec::yal::printDate(Stream& stream, const Entry& entry)
 {
-    const auto time = clock_t::to_time_t(entry.time);
-    const auto localtime = std::localtime(&time);
+    const auto utcTime = toDateTime<clock_t>(entry.time);
 
-    std::stringstream buf;
-    buf << std::put_time(localtime, "%F");
-    sink.writeEntryItem(buf.str());
+    stream << utcTime.year << '-';
+    appendZeroIfNeeded(stream, utcTime.month + 1) << '-';
+    appendZeroIfNeeded(stream, utcTime.day);
 }
 
-void artec::yal::printThread(AbstractSink& sink, const Entry& entry)
+void artec::yal::printThread(Stream& stream, const Entry& entry)
 {
     static std::unordered_map<std::thread::id, std::string> threadToString;
 
@@ -59,15 +74,15 @@ void artec::yal::printThread(AbstractSink& sink, const Entry& entry)
         std::stringstream buf;
         buf << "tid: " << std::setw(5) <<  entry.thread;
         threadToString.emplace(entry.thread, buf.str());
-        sink.writeEntryItem(buf.str());
+        stream << buf.str();
     }
     else
     {
-        sink.writeEntryItem(it->second);
+        stream << it->second;
     }
 }
 
-void artec::yal::printPlaceInCode(AbstractSink& sink, const Entry& entry)
+void artec::yal::printPlaceInCode(Stream& stream, const Entry& entry)
 {
-    sink.writeEntryItem(fmt::format("{0}:{1}", entry.file, entry.line));
+    stream << entry.file << ':' << entry.line;
 }

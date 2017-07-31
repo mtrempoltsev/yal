@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 
 project(yal)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 option(BUILD_FMTLIB "Builds the fmtlib-4.0.0" ON)
 option(BUILD_GTEST "Builds the gtest-1.8.0" ON)
@@ -36,10 +36,11 @@ set(YAL_SOURCES "${YAL_ROOT}/src")
 set(HEADERS
     ${YAL_HEADERS}/core.h
     ${YAL_HEADERS}/entries.h
-    ${YAL_HEADERS}/yal.h
     ${YAL_HEADERS}/printers.h
     ${YAL_HEADERS}/sinks.h
-    ${YAL_HEADERS}/severities.h)
+    ${YAL_HEADERS}/severities.h
+    ${YAL_HEADERS}/utils.h
+    ${YAL_HEADERS}/yal.h)
 
 set(SOURCES
     ${YAL_SOURCES}/core.cpp

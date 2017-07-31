@@ -15,9 +15,7 @@ namespace artec
         public:
             virtual ~AbstractSink() noexcept;
 
-            virtual void writeEntryItem(const std::string& text) = 0;
-            virtual void addSeparator() = 0;
-            virtual void endOfEntry() = 0;
+            virtual void out(const std::string& text) = 0;
             virtual void flush() = 0;
         };
 
@@ -29,9 +27,7 @@ namespace artec
         public:
             explicit StdStreamSink(std::ostream& stream) noexcept;
 
-            void writeEntryItem(const std::string& text) override;
-            void addSeparator() override;
-            void endOfEntry() override;
+            void out(const std::string& text) override;
             void flush() override;
 
         private:
@@ -44,9 +40,7 @@ namespace artec
         public:
             explicit FileSink(const std::string& fileName);
 
-            void writeEntryItem(const std::string& text) override;
-            void addSeparator() override;
-            void endOfEntry() override;
+            void out(const std::string& text) override;
             void flush() override;
 
         private:
