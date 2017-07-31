@@ -57,6 +57,34 @@ TEST(yal, checkEntry)
     EXPECT_EQ(thread, y.thread);
 }
 
+TEST(yal, checkPrintPointers)
+{
+    using namespace artec::yal;
+
+    std::stringstream buf;
+
+    SinkList sinks;
+    sinks.push_back(std::make_unique<StdStreamSink>(buf));
+    instance().setSinks(sinks);
+
+    PrinterList printers{ printText };
+    instance().setPrinters(printers);
+
+    artec::yal::instance().start();
+
+    const char* text = "Some Text";
+    int* x = 0;
+    int* y = (int*) 100;
+
+    YAL_INFO << text;
+    YAL_INFO << x;
+    YAL_INFO << y;
+
+    artec::yal::instance().stop().wait();
+
+    EXPECT_EQ(buf.str(), "Some Text\n0x00000000\n0x00000064\n");
+}
+
 TEST(yal, checkSeverity)
 {
     using namespace artec::yal;
