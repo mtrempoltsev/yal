@@ -13,7 +13,7 @@ TEST(yal, checkToDateTime)
     using namespace artec::yal;
 
     std::default_random_engine generator;
-    std::uniform_int_distribution<time_t> distribution(0, std::numeric_limits<time_t>::max());
+    std::uniform_int_distribution<time_t> distribution(0, std::numeric_limits<int32_t>::max());
 
     const int N = 100000;
     for (int i = 0; i < N; ++i)
@@ -190,7 +190,7 @@ void stressTest()
     std::ofstream file("log1.txt");
 
     artec::yal::SinkList sinks;
-    //sinks.push_back(std::make_unique<artec::yal::StdStreamSink>(file));
+    sinks.push_back(std::make_unique<artec::yal::StdStreamSink>(file));
     sinks.push_back(std::make_unique<artec::yal::FileSink>("log2.txt"));
     artec::yal::instance().setSinks(sinks);
 
@@ -254,9 +254,9 @@ int main(int argc, char* argv[])
 {
     artec::yal::instance().stop().wait();
 
-//#ifdef YAL_ENABLE_STRESS_TEST
+#ifdef YAL_ENABLE_STRESS_TEST
     stressTest();
-//#endif
+#endif
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
