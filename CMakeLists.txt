@@ -26,6 +26,8 @@ if(BUILD_GTEST)
     include_directories(${GTEST_DIR}/googletest/include)
 endif()
 
+find_package(Threads)
+
 get_filename_component(YAL_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${YAL_ROOT}/bin)
@@ -70,6 +72,9 @@ if(BUILD_EXAMPLES)
         default_settings)
     foreach(example IN ITEMS ${EXAMPLES})
         add_executable(${example} examples/${example}.cpp)
-        target_link_libraries(${example} fmt yal)
+        target_link_libraries(${example}
+            fmt
+            yal
+            ${CMAKE_THREAD_LIBS_INIT})
     endforeach()
 endif()

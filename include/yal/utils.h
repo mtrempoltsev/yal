@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/format.h>
+
 namespace artec
 {
     namespace yal
@@ -58,6 +60,21 @@ namespace artec
             result.day = dayno + 1;
 
             return result;
+        }
+
+        template <int PtrSize>
+        inline void printPointer(fmt::MemoryWriter& buffer, const void* value);
+
+        template <>
+        inline void printPointer<4>(fmt::MemoryWriter& buffer, const void* value) // x86
+        {
+            buffer.write("{0:0=#10x}", reinterpret_cast<const uint32_t>(value));
+        }
+
+        template <>
+        inline void printPointer<8>(fmt::MemoryWriter& buffer, const void* value) // x64
+        {
+            buffer.write("{0:0=#10x}", reinterpret_cast<const uint64_t>(value));
         }
     }
 }

@@ -8,6 +8,7 @@
 #include <fmt/format.h>
 
 #include <yal/severities.h>
+#include <yal/utils.h>
 
 namespace artec
 {
@@ -59,31 +60,14 @@ namespace artec
             template <class T>
             EntryMaker& operator<<(T* value)
             {
-                printPointer<sizeof(T*)>(reinterpret_cast<const void*>(value));
+                printPointer<sizeof(T*)>(buffer_, reinterpret_cast<const void*>(value));
                 return *this;
             }
 
-            template <>
             EntryMaker& operator<<(const char* value)
             {
                 buffer_ << value;
                 return *this;
-            }
-
-        private:
-            template <int PtrSize>
-            void printPointer(const void* value);
-
-            template <>
-            void printPointer<4>(const void* value) // x86
-            {
-                buffer_.write("{0:0=#10x}", reinterpret_cast<const uint32_t>(value));
-            }
-
-            template <>
-            void printPointer<8>(const void* value) // x64
-            {
-                buffer_.write("{0:0=#10x}", reinterpret_cast<const uint64_t>(value));
             }
 
         private:
