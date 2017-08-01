@@ -17,7 +17,7 @@ namespace artec
         template <class clock_t>
         DateTime toDateTime(const typename clock_t::time_point& timePoint) noexcept
         {
-            const int32_t time = clock_t::to_time_t(timePoint);
+            const int32_t time = static_cast<int32_t>(clock_t::to_time_t(timePoint));
 
             const int32_t secondsInDay = 24 * 60 * 60;
 
@@ -40,7 +40,7 @@ namespace artec
             result.min = (dayclock % 3600) / 60;
             result.hour = dayclock / 3600;
 
-            int64_t dayno = time / secondsInDay;
+            int32_t dayno = time / secondsInDay;
             while (dayno >= daysInYear(year))
             {
                 dayno -= daysInYear(year);
