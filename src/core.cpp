@@ -51,7 +51,7 @@ void artec::yal::Core::start()
 {
     if (keepWorking_.test_and_set())
     {
-        throw std::logic_error("yal already running");
+        return;
     }
 
     buffer_.clear();
@@ -73,7 +73,9 @@ artec::yal::Core::future_t artec::yal::Core::stop()
 {
     if (!thread_.joinable())
     {
-        throw std::logic_error("yal already stopped");
+        std::promise<void> promise;
+        promise.set_value();
+        return promise.get_future();
     }
 
     keepWorking_.clear();

@@ -4,6 +4,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include <fmt/ostream.h>
+
 #include "../include/yal/entries.h"
 #include "../include/yal/utils.h"
 
@@ -66,20 +68,7 @@ void artec::yal::printDate(Stream& stream, const Entry& entry)
 
 void artec::yal::printThread(Stream& stream, const Entry& entry)
 {
-    static std::unordered_map<std::thread::id, std::string> threadToString;
-
-    auto it = threadToString.find(entry.thread);
-    if (it == std::end(threadToString))
-    {
-        std::stringstream buf;
-        buf << "tid: " << std::setw(5) <<  entry.thread;
-        threadToString.emplace(entry.thread, buf.str());
-        stream << buf.str();
-    }
-    else
-    {
-        stream << it->second;
-    }
+    stream.write("TID {0}", entry.thread);
 }
 
 void artec::yal::printPlaceInCode(Stream& stream, const Entry& entry)
