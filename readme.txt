@@ -20,7 +20,7 @@ int main()
 {
     YAL_INFO << 1;
     YAL_WARNING << fmt::format("{0}: {1}", "message", 2);
-    YAL_ERROR << 3 << 4 << 5;
+    YAL_ERROR << 3 << ' ' << static_cast<int*>(nullptr);
     return 0;
 }
 
@@ -47,7 +47,7 @@ int main()
 
     YAL_INFO << 1;
     YAL_WARNING << fmt::format("{0}: {1}", "message", 2);
-    YAL_ERROR << 3 << 4 << 5;
+    YAL_ERROR << 3 << ' ' << static_cast<int*>(nullptr);
 
     return 0;
 }
@@ -72,9 +72,9 @@ int main()
     };
     artec::yal::instance().setPrinters(printers);
 
-    YAL_INFO << 1 << nullptr;
+    YAL_INFO << 1;
     YAL_WARNING << fmt::format("{0}: {1}", "message", 2);
-    YAL_ERROR << 3 << 4 << 5;
+    YAL_ERROR << 3 << ' ' << static_cast<int*>(nullptr);
 
     return 0;
 }
