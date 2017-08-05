@@ -3,22 +3,18 @@
 #include <fstream>
 #include <memory>
 #include <ostream>
-#include <string>
 #include <vector>
+
+#include "abstract_sink.h"
+
+#ifdef YAL_USES_BOOST
+#include "rolling_file.h"
+#endif
 
 namespace artec
 {
     namespace yal
     {
-        class AbstractSink
-        {
-        public:
-            virtual ~AbstractSink() noexcept;
-
-            virtual void out(const std::string& text) = 0;
-            virtual void flush() = 0;
-        };
-
         using SinkList = std::vector<std::unique_ptr<AbstractSink>>;
 
         class StdStreamSink final

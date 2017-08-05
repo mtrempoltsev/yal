@@ -1,9 +1,5 @@
 ﻿#include "../include/yal/sinks.h"
 
-artec::yal::AbstractSink::~AbstractSink() noexcept
-{
-}
-
 artec::yal::StdStreamSink::StdStreamSink(std::ostream& stream) noexcept
     : stream_(stream)
 {

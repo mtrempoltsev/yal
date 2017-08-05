@@ -26,6 +26,12 @@ if(BUILD_GTEST)
     include_directories(${GTEST_DIR}/googletest/include)
 endif()
 
+find_package(Boost COMPONENTS filesystem system)
+if(Boost_FOUND)
+    add_definitions(-DYAL_USES_BOOST)
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 find_package(Threads)
 
 get_filename_component(YAL_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
@@ -39,6 +45,7 @@ set(YAL_HEADERS "${YAL_INCLUDE}/yal")
 set(YAL_SOURCES "${YAL_ROOT}/src")
 
 set(HEADERS
+    ${YAL_HEADERS}/abstract_sink.h
     ${YAL_HEADERS}/core.h
     ${YAL_HEADERS}/entries.h
     ${YAL_HEADERS}/printers.h
@@ -53,6 +60,13 @@ set(SOURCES
     ${YAL_SOURCES}/printers.cpp
     ${YAL_SOURCES}/sinks.cpp
     ${YAL_SOURCES}/severities.cpp)
+
+if(Boost_FOUND)
+    set(HEADERS ${HEADERS}
+        ${YAL_HEADERS}/rolling_file.h)
+    set(SOURCES ${SOURCES}
+        ${YAL_SOURCES}/rolling_file.cpp)
+endif()
 
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
@@ -75,6 +89,7 @@ if(BUILD_EXAMPLES)
         target_link_libraries(${example}
             fmt
             yal
-            ${CMAKE_THREAD_LIBS_INIT})
+            ${CMAKE_THREAD_LIBS_INIT}
+            ${Boost_LIBRARIES})
     endforeach()
 endif()

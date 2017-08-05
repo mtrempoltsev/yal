@@ -7,6 +7,9 @@ int main()
     artec::yal::SinkList sinks;
     sinks.push_back(std::make_unique<artec::yal::StdStreamSink>(std::cerr));
     sinks.push_back(std::make_unique<artec::yal::FileSink>("log.txt"));
+#ifdef YAL_USES_BOOST
+    sinks.push_back(std::make_unique<artec::yal::RollingFileSink>(".", "rolling_file_"));
+#endif
     artec::yal::instance().setSinks(sinks);
 
     YAL_INFO << 1;
