@@ -4,12 +4,14 @@ project(yal)
 
 set(CMAKE_CXX_STANDARD 14)
 
+get_filename_component(YAL_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+
 option(BUILD_FMTLIB "Builds the fmtlib-4.0.0" ON)
 option(BUILD_GTEST "Builds the gtest-1.8.0" ON)
 option(BUILD_TESTS "Builds the tests" ON)
 option(BUILD_EXAMPLES "Builds the examples" ON)
 
-set(3RD_PARTY_DIR 3rd-party)
+set(3RD_PARTY_DIR ${YAL_ROOT}/3rd-party)
 
 if(BUILD_FMTLIB)
     set(FMTLIB_DIR "${3RD_PARTY_DIR}/fmt-4.0.0")
@@ -33,8 +35,6 @@ if(Boost_FOUND)
 endif()
 
 find_package(Threads)
-
-get_filename_component(YAL_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${YAL_ROOT}/bin)
 
