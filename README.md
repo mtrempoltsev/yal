@@ -1,7 +1,7 @@
 ﻿ArtecGroup YAL is fast and very simple logger
 
 
-##How to build
+## How to build
 
 From this directory:
 ```
@@ -11,7 +11,7 @@ cmake ..
 make
 ```
 
-##Using the logger
+## Using the logger
 
 ```
 #include <yal/yal.h>
@@ -34,7 +34,7 @@ ERROR 05:06:58.26943 3 0x00000000
 ```
 
 
-##Set custom sinks
+## Set custom sinks
 
 ```
 #include <iostream>
@@ -60,7 +60,7 @@ int main()
 ```
 
 
-##Customazing formatting
+## Customazing formatting
 
 ```
 #include <yal/yal.h>
@@ -95,7 +95,7 @@ ERROR TID 18528 2017-09-01 +0300 05:04:45.675292 3 0x00000000 C:\work\yal\exampl
 ```
 
 
-##Write a log message only if the condition is true
+## Write a log message only if the condition is true
 ```
 auto result = foo();
 YAL_ERROR_IF(result != Status::Success) << "Error: " << result;
