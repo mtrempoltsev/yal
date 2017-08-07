@@ -34,7 +34,7 @@ endif()
 
 find_package(Threads)
 
-get_filename_component(YAL_ROOT "${CMAKE_SOURCE_DIR}" ABSOLUTE)
+get_filename_component(YAL_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${YAL_ROOT}/bin)
 
