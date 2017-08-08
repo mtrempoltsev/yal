@@ -20,7 +20,7 @@ TEST(yal, checkToDateTime)
     {
         const auto t = distribution(generator);
 
-        const auto t1 = toDateTime<artec::yal::clock_t>(artec::yal::clock_t::from_time_t(t));
+        const auto t1 = toDateTime<ClockType>(ClockType::from_time_t(t));
         const auto t2 = std::gmtime(&t);
 
         EXPECT_EQ(t1.year, t2->tm_year + 1900);
@@ -67,8 +67,7 @@ TEST(yal, checkPrintPointers)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printText };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<TextItem>("{0}");
 
     artec::yal::instance().start();
 
@@ -95,8 +94,7 @@ TEST(yal, checkSeverity)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers { printSeverity };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<SeverityItem>("{0}");
 
     instance().setThreshold(Severity::Debug);
 
@@ -123,8 +121,7 @@ TEST(yal, checkIfCondition)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printSeverity };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<SeverityItem>("{0}");
 
     instance().setThreshold(Severity::Debug);
 
@@ -157,8 +154,7 @@ TEST(yal, checkIfConditionThreshold)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printSeverity };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<SeverityItem>("{0}");
 
     instance().setThreshold(Severity::Warning);
 
@@ -193,8 +189,7 @@ TEST(yal, checkThreshold)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printSeverity };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<SeverityItem>("{0}");
 
     instance().setThreshold(Severity::Warning);
 
@@ -221,8 +216,7 @@ TEST(yal, checkText)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printText };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<TextItem>("{0}");
 
     instance().setThreshold(Severity::Error);
 
@@ -249,8 +243,7 @@ TEST(yal, checkSeverityAndText)
     sinks.push_back(std::make_unique<StdStreamSink>(buf));
     instance().setSinks(sinks);
 
-    PrinterList printers{ printSeverity, printText };
-    instance().setPrinters(printers);
+    instance().getFormatter().setFormat<SeverityItem, TextItem>("{0} {1}");
 
     instance().setThreshold(Severity::Info);
 
@@ -273,17 +266,17 @@ void stressTest()
 
     artec::yal::instance().start();
 
-    artec::yal::PrinterList printers
-    {
-        artec::yal::printSeverity,
-        artec::yal::printTimezone,
-        artec::yal::printDate,
-        artec::yal::printTime,
-        artec::yal::printThread,
-        artec::yal::printText,
-        artec::yal::printPlaceInCode
-    };
-    artec::yal::instance().setPrinters(printers);
+    artec::yal::instance().getFormatter().setFormat
+        <
+            artec::yal::SeverityItem,
+            artec::yal::TimezoneItem,
+            artec::yal::DateItem,
+            artec::yal::TimeItem,
+            artec::yal::ThreadItem,
+            artec::yal::TextItem,
+            artec::yal::PlaceInCodeItem
+        >
+        ("{0} {1} {2} {3} {4} {5} {6}");
 
     std::ofstream file("log1.txt");
 

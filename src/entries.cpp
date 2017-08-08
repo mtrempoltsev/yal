@@ -6,7 +6,7 @@ artec::yal::Entry::Entry(Severity severityLevel, const char* const fileName, siz
     : level(severityLevel)
     , file(fileName)
     , line(lineOfFile)
-    , time(clock_t::now())
+    , time(ClockType::now())
     , thread(std::this_thread::get_id())
 {
 }

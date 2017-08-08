@@ -6,7 +6,8 @@
 #include <thread>
 
 #include <yal/entries.h>
-#include <yal/printers.h>
+#include <yal/items.h>
+#include <yal/formatter.h>
 #include <yal/sinks.h>
 
 namespace artec
@@ -20,7 +21,8 @@ namespace artec
             ~Core();
 
             void setSinks(SinkList& sinks);
-            void setPrinters(PrinterList& printers);
+
+            Formatter& getFormatter();
 
             void start();
 
@@ -44,8 +46,10 @@ namespace artec
             std::atomic_flag keepWorking_;
 
             EntryList buffer_;
+
             SinkList sinks_;
-            PrinterList printers_;
+
+            Formatter formatter_;
 
             Severity threshold_;
         };

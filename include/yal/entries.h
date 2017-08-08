@@ -14,7 +14,7 @@ namespace artec
 {
     namespace yal
     {
-        using clock_t = std::chrono::system_clock;
+        using ClockType = std::chrono::system_clock;
 
         class Core;
 
@@ -31,7 +31,7 @@ namespace artec
             Severity level;
             const char* file;
             int line;
-            clock_t::time_point time;
+            ClockType::time_point time;
             std::thread::id thread;
             std::string text;
         };

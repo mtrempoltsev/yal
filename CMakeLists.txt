@@ -48,7 +48,8 @@ set(HEADERS
     ${YAL_HEADERS}/abstract_sink.h
     ${YAL_HEADERS}/core.h
     ${YAL_HEADERS}/entries.h
-    ${YAL_HEADERS}/printers.h
+    ${YAL_HEADERS}/formatter.h
+    ${YAL_HEADERS}/items.h
     ${YAL_HEADERS}/sinks.h
     ${YAL_HEADERS}/severities.h
     ${YAL_HEADERS}/utils.h
@@ -57,7 +58,7 @@ set(HEADERS
 set(SOURCES
     ${YAL_SOURCES}/core.cpp
     ${YAL_SOURCES}/entries.cpp
-    ${YAL_SOURCES}/printers.cpp
+    ${YAL_SOURCES}/items.cpp
     ${YAL_SOURCES}/sinks.cpp
     ${YAL_SOURCES}/severities.cpp)
 
@@ -81,7 +82,7 @@ endif()
 
 if(BUILD_EXAMPLES)
     set(EXAMPLES
-        custom_printers
+        custom_formatting
         custom_sinks
         default_settings)
     foreach(example IN ITEMS ${EXAMPLES})

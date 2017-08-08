@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "../include/yal/sinks.h"
-
 artec::yal::Core& artec::yal::instance()
 {
     static Core core;
@@ -11,9 +9,9 @@ artec::yal::Core& artec::yal::instance()
 }
 
 artec::yal::Core::Core()
-    : printers_{ printSeverity, printTime, printText }
-    , threshold_(Severity::Info)
+    : threshold_(Severity::Info)
 {
+    formatter_.setFormat<SeverityItem, TimeItem, TextItem>("{0} {1} {2}");
     sinks_.push_back(std::make_unique<StdStreamSink>(std::cout));
 
     start();
@@ -32,9 +30,9 @@ void artec::yal::Core::setSinks(SinkList& sinks)
     sinks_.swap(sinks);
 }
 
-void artec::yal::Core::setPrinters(PrinterList& printers)
+artec::yal::Formatter& artec::yal::Core:: getFormatter()
 {
-    printers_.swap(printers);
+    return formatter_;
 }
 
 void artec::yal::Core::setThreshold(Severity level)
@@ -127,26 +125,11 @@ void artec::yal::Core::process(const EntryList& entries)
 {
     for (const auto& entry : entries)
     {
-        Stream buf;
-
-        bool isFirst = true;
-        for (auto& printer : printers_)
-        {
-            if (isFirst)
-            {
-                isFirst = false;
-            }
-            else
-            {
-                buf << ' ';
-            }
-
-            printer(buf, entry);
-        }
+        const auto message = formatter_.format(entry);
 
         for (auto& sink : sinks_)
         {
-            sink->out(buf.str());
+            sink->out(message);
         }
     }
 

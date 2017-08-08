@@ -67,17 +67,17 @@ int main()
 
 int main()
 {
-    artec::yal::PrinterList printers
-    {
-        artec::yal::printSeverity,
-        artec::yal::printThread,
-        artec::yal::printDate,
-        artec::yal::printTimezone,
-        artec::yal::printTime,
-        artec::yal::printText,
-        artec::yal::printPlaceInCode
-    };
-    artec::yal::instance().setPrinters(printers);
+    artec::yal::instance().getFormatter().setFormat
+        <
+            artec::yal::SeverityItem,
+            artec::yal::ThreadItem,
+            artec::yal::DateItem,
+            artec::yal::TimeItem,
+            artec::yal::TimezoneItem,
+            artec::yal::TextItem,
+            artec::yal::PlaceInCodeItem
+        >
+        ("{0} [TID: {1:=#010x}, {2}, {3} {4}] : {5:<20} <{6}>");
 
     YAL_INFO << 1;
     YAL_WARNING << fmt::format("{0}: {1}", "message", 2);
@@ -89,9 +89,9 @@ int main()
 
 Console output:
 ```
-INFO  TID 18528 2017-09-01 +0300 05:04:45.675185 1 C:\work\yal\examples\custom_printers.cpp:17
-WARN  TID 18528 2017-09-01 +0300 05:04:45.675281 message: 2 C:\work\yal\examples\custom_printers.cpp:18
-ERROR TID 18528 2017-09-01 +0300 05:04:45.675292 3 0x00000000 C:\work\yal\examples\custom_printers.cpp:19
+INFO  [TID: 0x000029a4, 2017-09-08, 14:30:45.739321 +0300] : 1                    <C:\work\yal\examples\custom_formatting.cpp:17>
+WARN  [TID: 0x000029a4, 2017-09-08, 14:30:45.739380 +0300] : message: 2           <C:\work\yal\examples\custom_formatting.cpp:18>
+ERROR [TID: 0x000029a4, 2017-09-08, 14:30:45.739389 +0300] : 3 0x00000000         <C:\work\yal\examples\custom_formatting.cpp:19>
 ```
 
 

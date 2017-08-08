@@ -16,10 +16,10 @@ namespace artec
             int sec;
         };
 
-        template <class clock_t>
-        DateTime toDateTime(const typename clock_t::time_point& timePoint) noexcept
+        template <class ClockType>
+        DateTime toDateTime(const typename ClockType::time_point& timePoint) noexcept
         {
-            const int32_t time = static_cast<int32_t>(clock_t::to_time_t(timePoint));
+            const int32_t time = static_cast<int32_t>(ClockType::to_time_t(timePoint));
 
             const int32_t secondsInDay = 24 * 60 * 60;
 
