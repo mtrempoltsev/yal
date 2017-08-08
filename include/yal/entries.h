@@ -72,13 +72,15 @@ namespace artec
 
         private:
             template <class T>
-            typename std::enable_if<sizeof(T*) == 4, void>::type printPointer(fmt::MemoryWriter& buffer, const T* value)
+            void printPointer(fmt::MemoryWriter& buffer, const T* value,
+                typename std::enable_if<sizeof(T*) == 4, void>::type* dummy = nullptr)
             {
                 buffer.write("{0:0=#10x}", reinterpret_cast<const uint32_t>(value));
             }
 
             template <class T>
-            typename std::enable_if<sizeof(T*) == 8, EntryMaker&>::type printPointer(fmt::MemoryWriter& buffer, const T* value)
+            void printPointer(fmt::MemoryWriter& buffer, const T* value,
+                typename std::enable_if<sizeof(T*) == 8, void>::type* dummy = nullptr)
             {
                 buffer.write("{0:0=#10x}", reinterpret_cast<const uint64_t>(value));
             }
