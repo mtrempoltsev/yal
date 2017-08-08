@@ -117,7 +117,7 @@ void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, c
 
     std::stringstream buf;
     buf << item.entry.thread;
-    const auto tid = std::stol(buf.str());
+    const auto tid = std::stoul(buf.str());
 
     YAL_FORMAT_VALUE(tid)
 }
