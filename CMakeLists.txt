@@ -60,7 +60,8 @@ set(SOURCES
     ${YAL_SOURCES}/entries.cpp
     ${YAL_SOURCES}/items.cpp
     ${YAL_SOURCES}/sinks.cpp
-    ${YAL_SOURCES}/severities.cpp)
+    ${YAL_SOURCES}/severities.cpp
+    ${YAL_SOURCES}/utils.cpp)
 
 if(Boost_FOUND)
     set(HEADERS ${HEADERS}

@@ -20,7 +20,7 @@ TEST(yal, checkToDateTime)
     {
         const auto t = distribution(generator);
 
-        const auto t1 = toDateTime<ClockType>(ClockType::from_time_t(t));
+        const auto t1 = toDateTime(ClockType::from_time_t(t));
         const auto t2 = std::gmtime(&t);
 
         EXPECT_EQ(t1.year, t2->tm_year + 1900);

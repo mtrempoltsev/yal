@@ -89,7 +89,7 @@ void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, c
     const auto upToSecond = ClockType::from_time_t(time);
     const auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(item.entry.time - upToSecond).count();
 
-    const auto utcTime = toDateTime<ClockType>(item.entry.time);
+    const auto utcTime = toDateTime(item.entry.time);
 
     appendZeroIfNeeded(formatter.writer(), utcTime.hour) << ':';
     appendZeroIfNeeded(formatter.writer(), utcTime.min) << ':';
@@ -102,7 +102,7 @@ void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, c
 {
     using namespace artec::yal;
 
-    const auto utcTime = toDateTime<ClockType>(item.entry.time);
+    const auto utcTime = toDateTime(item.entry.time);
 
     formatter.writer() << utcTime.year << '-';
     appendZeroIfNeeded(formatter.writer(), utcTime.month + 1) << '-';
