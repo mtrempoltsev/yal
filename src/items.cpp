@@ -27,7 +27,10 @@ namespace
 
         const char* end = begin + 1;
         while (*end && *end != '}')
+        {
             ++end;
+        }
+
         return end + 1;
     }
 
@@ -37,41 +40,38 @@ namespace
         format.append(begin, end);
         return format;
     }
-}
 
-#define YAL_FORMAT_VALUE(value) \
-    const char* end = findEnd(begin); \
-    if (begin + 1 != end) \
-    { \
-        formatter.writer().write(getFormat(begin, end), (value)); \
-    } \
-    else \
-    { \
-        formatter.writer() << (value); \
-    } \
-    begin = end;
+    template <class T>
+    void formatItem(fmt::BasicFormatter<char>& formatter, const char*& begin, const T& value)
+    {
+        const char* end = findEnd(begin);
+        if (begin + 1 != end)
+        {
+            formatter.writer().write(getFormat(begin, end), (value));
+        }
+        else
+        {
+            formatter.writer() << (value);
+        }
+        begin = end;
+    }
+}
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::SeverityItem& item)
 {
-    using namespace artec::yal;
-
-    YAL_FORMAT_VALUE(toString(item.entry.level))
+    formatItem(formatter, begin, toString(item.entry.level));
 }
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::TextItem& item)
 {
-    using namespace artec::yal;
-
-    YAL_FORMAT_VALUE(item.entry.text)
+    formatItem(formatter, begin, item.entry.text);
 }
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::TimezoneItem& item)
 {
     //TODO need to improve performance (localtime is very expensive)
 
-    using namespace artec::yal;
-
-    const auto time = ClockType::to_time_t(item.entry.time);
+    const auto time = artec::yal::ClockType::to_time_t(item.entry.time);
     const auto localtime = std::localtime(&time);
 
     std::stringstream buf;
@@ -100,9 +100,7 @@ void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, c
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::DateItem& item)
 {
-    using namespace artec::yal;
-
-    const auto utcTime = toDateTime(item.entry.time);
+    const auto utcTime = artec::yal::toDateTime(item.entry.time);
 
     formatter.writer() << utcTime.year << '-';
     appendZeroIfNeeded(formatter.writer(), utcTime.month + 1) << '-';
@@ -113,22 +111,15 @@ void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, c
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::ThreadItem& item)
 {
-    using namespace artec::yal;
-
     std::stringstream buf;
     buf << item.entry.thread;
     const auto tid = std::stoul(buf.str());
 
-    YAL_FORMAT_VALUE(tid)
+    formatItem(formatter, begin, tid);
 }
 
 void fmt::format_arg(fmt::BasicFormatter<char>& formatter, const char*& begin, const artec::yal::PlaceInCodeItem& item)
 {
-    using namespace artec::yal;
-
     formatter.writer() << item.entry.file << ':' << item.entry.line;
-
     begin = findEnd(begin);
 }
-
-#undef YAL_FORMAT_VALUE
