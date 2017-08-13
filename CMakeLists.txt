@@ -6,26 +6,26 @@ set(CMAKE_CXX_STANDARD 14)
 
 get_filename_component(YAL_ROOT "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 
-option(BUILD_FMTLIB "Builds the fmtlib-4.0.0" ON)
-option(BUILD_GTEST "Builds the gtest-1.8.0" ON)
-option(BUILD_TESTS "Builds the tests" ON)
-option(BUILD_EXAMPLES "Builds the examples" ON)
+option(YAL_BUILD_FMTLIB "Builds the fmtlib-4.0.0" ON)
+option(YAL_BUILD_GTEST "Builds the gtest-1.8.0" ON)
+option(YAL_BUILD_TESTS "Builds the tests" ON)
+option(YAL_BUILD_EXAMPLES "Builds the examples" ON)
 
 set(3RD_PARTY_DIR ${YAL_ROOT}/3rd-party)
 
-if(BUILD_FMTLIB)
-    set(FMTLIB_DIR "${3RD_PARTY_DIR}/fmt-4.0.0")
-    add_subdirectory(${FMTLIB_DIR})
-    include_directories(${FMTLIB_DIR})
+if(YAL_BUILD_FMTLIB)
+    set(YAL_FMTLIB_DIR "${3RD_PARTY_DIR}/fmt-4.0.0")
+    add_subdirectory(${YAL_FMTLIB_DIR})
+    include_directories(${YAL_FMTLIB_DIR})
 endif()
 
-if(BUILD_GTEST)
-    set(BUILD_GTEST ON CACHE BOOL "Build gtest-1.80")
-    set(BUILD_GMOCK OFF CACHE BOOL "Build gmock-1.80")
+if(YAL_BUILD_GTEST)
+    set(BUILD_GTEST ON CACHE BOOL "Build gtest")
+    set(BUILD_GMOCK OFF CACHE BOOL "Build gmock")
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    set(GTEST_DIR "${3RD_PARTY_DIR}/gtest-1.8.0")
-    add_subdirectory(${GTEST_DIR})
-    include_directories(${GTEST_DIR}/googletest/include)
+    set(YAL_GTEST_DIR "${3RD_PARTY_DIR}/gtest")
+    add_subdirectory(${YAL_GTEST_DIR})
+    include_directories(${YAL_GTEST_DIR}/googletest/include)
 endif()
 
 find_package(Boost COMPONENTS filesystem system)
@@ -72,21 +72,21 @@ endif()
 
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
-if(BUILD_TESTS)
-    set(TEST_PROJECT test_${PROJECT_NAME})
-    add_test(NAME ${TEST_PROJECT} COMMAND ${TEST_PROJECT})
+if(YAL_BUILD_TESTS)
+    set(YAL_TEST_PROJECT test_${PROJECT_NAME})
+    add_test(NAME ${YAL_TEST_PROJECT} COMMAND ${YAL_TEST_PROJECT})
 
     add_subdirectory(tests)
 
     enable_testing()
 endif()
 
-if(BUILD_EXAMPLES)
-    set(EXAMPLES
+if(YAL_BUILD_EXAMPLES)
+    set(YAL_EXAMPLES
         custom_formatting
         custom_sinks
         default_settings)
-    foreach(example IN ITEMS ${EXAMPLES})
+    foreach(example IN ITEMS ${YAL_EXAMPLES})
         add_executable(${example} examples/${example}.cpp)
         target_link_libraries(${example}
             fmt
