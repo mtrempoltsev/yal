@@ -2,7 +2,7 @@
 
 #include "../include/yal/core.h"
 
-artec::yal::Entry::Entry(Severity severityLevel, const char* const fileName, size_t lineOfFile) noexcept
+artec::yal::Entry::Entry(Severity severityLevel, const char* const fileName, int lineOfFile) noexcept
     : level(severityLevel)
     , file(fileName)
     , line(lineOfFile)
@@ -21,7 +21,7 @@ artec::yal::Entry::Entry(Entry&& moved) noexcept
 {
 }
 
-artec::yal::EntryMaker::EntryMaker(Severity severityLevel, const char* const fileName, size_t lineOfFile)
+artec::yal::EntryMaker::EntryMaker(Severity severityLevel, const char* const fileName, int lineOfFile)
     : entry_(severityLevel, fileName, lineOfFile)
 {
 }

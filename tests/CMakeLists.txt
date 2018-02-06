@@ -1,4 +1,4 @@
-project(${TEST_PROJECT})
+project(${YAL_TEST_PROJECT})
 
 set(SOURCES
     main.cpp)

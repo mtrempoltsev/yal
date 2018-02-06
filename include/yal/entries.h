@@ -20,7 +20,7 @@ namespace artec
 
         struct Entry final
         {
-            Entry(Severity severityLevel, const char* const fileName, size_t lineOfFile) noexcept;
+            Entry(Severity severityLevel, const char* const fileName, int lineOfFile) noexcept;
 
             Entry(const Entry&) = delete;
             Entry& operator=(const Entry&) = delete;
@@ -41,7 +41,7 @@ namespace artec
         class EntryMaker final
         {
         public:
-            EntryMaker(Severity severityLevel, const char* const fileName, size_t lineOfFile);
+            EntryMaker(Severity severityLevel, const char* const fileName, int lineOfFile);
             ~EntryMaker();
 
             EntryMaker(const EntryMaker&) = delete;
@@ -71,16 +71,14 @@ namespace artec
             }
 
         private:
-            template <class T>
-            void printPointer(fmt::MemoryWriter& buffer, const T* value,
-                typename std::enable_if<sizeof(T*) == 4, void>::type* dummy = nullptr)
+            template <class T, typename std::enable_if<sizeof(T*) == 4, int>::type = 0>
+            void printPointer(fmt::MemoryWriter& buffer, const T* value)
             {
                 buffer.write("{0:0=#10x}", reinterpret_cast<const uint32_t>(value));
             }
 
-            template <class T>
-            void printPointer(fmt::MemoryWriter& buffer, const T* value,
-                typename std::enable_if<sizeof(T*) == 8, void>::type* dummy = nullptr)
+            template <class T, typename std::enable_if<sizeof(T*) == 8, int>::type = 0>
+            void printPointer(fmt::MemoryWriter& buffer, const T* value)
             {
                 buffer.write("{0:0=#10x}", reinterpret_cast<const uint64_t>(value));
             }
